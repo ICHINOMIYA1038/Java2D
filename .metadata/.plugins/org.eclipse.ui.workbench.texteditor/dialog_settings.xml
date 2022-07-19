@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="249"/>
+		<item key="DIALOG_Y_ORIGIN" value="270"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="insets"/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="insets"/>
+			<item value="g.drawImage(backimage,0,0,frame1);"/>
+			<item value="back"/>
+			<item value="interval"/>
+			<item value="difficulty"/>
+			<item value="魔女とプレイヤー"/>
+			<item value="fakespan"/>
+			<item value="ヴァンパイア"/>
+			<item value="title"/>
+			<item value="runtitle"/>
+			<item value="seTitle"/>
+			<item value="titlebgm"/>
+			<item value="explosion3"/>
+			<item value="explosion"/>
+			<item value="explosion3img"/>
+		</list>
+		<list key="replacehistory">
+			<item value="BOSS_SCORE"/>
+			<item value="tab"/>
+			<item value="readMidi"/>
+			<item value="readSound"/>
+			<item value="tekikazu"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="9"/>
+		<item key="DIALOG_Y_ORIGIN" value="207"/>
+		<item key="DIALOG_WIDTH" value="414"/>
+		<item key="DIALOG_HEIGHT" value="454"/>
+		<item key="DIALOG_FONT_NAME" value="1|Yu Gothic UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Yu Gothic UI"/>
+	</section>
+</section>

@@ -1,0 +1,4 @@
+1655170430019	Convert local variable 'int1' to field
+1655171945956	Rename type 'test'
+1655172007016	Rename type 'AB'
+1655172724404	Extract constant '_10'

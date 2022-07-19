@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;GameTestMain.java&apos; to &apos;FusenGame/jp.ichinomiya.minigame&apos;&#x0A;- Original project: &apos;GameTest&apos;&#x0A;- Destination element: &apos;FusenGame/jp.ichinomiya.minigame&apos;&#x0A;- Original element: &apos;jp.ichinomiya.minigame.GameTestMain.java&apos;" description="Copy compilation unit" destination="=FusenGame/&lt;jp.ichinomiya.minigame" element1="/&lt;jp.ichinomiya.minigame{GameTestMain.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1655353650078" units="1" version="1.0"/>
+</session>
