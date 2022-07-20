@@ -22,6 +22,8 @@
 		<item key="WizardFileSystemResourceImportPage1.STORE_OVERWRITE_EXISTING_RESOURCES_ID" value="false"/>
 		<item key="WizardFileSystemResourceImportPage1.STORE_CREATE_CONTAINER_STRUCTURE_ID" value="false"/>
 		<list key="WizardFileSystemResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="C:\Users\ryohe\Downloads"/>
+			<item value="C:\Users\ryohe\OneDrive\デスクトップ\img"/>
 			<item value="/Users/a50609/eclipse-workspace/img"/>
 			<item value="/Users/a50609/eclipse-workspace/sound"/>
 			<item value="/Users/a50609/eclipse-workspace"/>

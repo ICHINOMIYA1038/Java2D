@@ -50,8 +50,8 @@
 		<item key="updateTextualMatches" value="true"/>
 	</section>
 	<section name="RefactoringWizard.preview">
-		<item key="width" value="602"/>
-		<item key="height" value="325"/>
+		<item key="width" value="700"/>
+		<item key="height" value="480"/>
 	</section>
 	<section name="SourceActionDialog.methods">
 		<item key="VisibilityModifier" value="1"/>
@@ -186,5 +186,7 @@
 	</section>
 	<section name="SelfEncapsulateFieldWizard">
 		<item key="GenerateJavadoc" value="false"/>
+	</section>
+	<section name="BreadcrumbItemDropDown">
 	</section>
 </section>

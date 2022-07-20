@@ -29,7 +29,7 @@ public class Player extends GameChara {
 	 * @param img　画像
 	 */
 	public Player(int x, int y, BufferedImage img) {
-		super(x, y, 12,12,img, 0, 0, 50, 50);
+		super(x, y, 12,12,img, 0, 0, 40, 78);
 		// TODO Auto-generated constructor stub
 	}
 
