@@ -154,8 +154,6 @@ public abstract class GameTemplate {
 	
 	class MyMouseMotionAdapter extends MouseAdapter{
 		public void mouseMoved(MouseEvent e) {
-			System.out.println("upkey:"+upkey);
-			System.out.println("upkey:"+downkey);
 			if (e.getY()<player_y) {
 				upkey = true;
 				downkey = false;

@@ -1,0 +1,9 @@
+package jp.ichinomiya.minigame;
+
+public class Affiin {
+
+	public Affiin() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

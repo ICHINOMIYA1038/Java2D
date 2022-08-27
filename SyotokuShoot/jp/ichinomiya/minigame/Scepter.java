@@ -46,5 +46,9 @@ public class Scepter extends GameChara {
 	public void showHP(Graphics g, ImageObserver io){
 
 	}
+	
+	public void change_img(BufferedImage img, ImageObserver io) {
+		
+	}
 
 }

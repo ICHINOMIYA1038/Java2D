@@ -5,28 +5,28 @@
 		<item key="DIALOG_Y_ORIGIN" value="270"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="distance"/>
+		<item key="selection" value="scepterimg"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="distance"/>
-			<item value="distance+"/>
-			<item value="runstage"/>
-			<item value="clear"/>
-			<item value="rungame"/>
-			<item value="rungameclear"/>
-			<item value="ゲームオーバー"/>
-			<item value="gameover"/>
-			<item value="score"/>
-			<item value="back"/>
-			<item value="back.png"/>
-			<item value="insets"/>
-			<item value="g.drawImage(backimage,0,0,frame1);"/>
-			<item value="interval"/>
-			<item value="difficulty"/>
+			<item value="scepterimg"/>
+			<item value="goal_distance"/>
+			<item value="witch"/>
+			<item value="ゾンビ"/>
+			<item value="tikeiimage"/>
+			<item value="map"/>
+			<item value="img"/>
+			<item value="gamemain"/>
+			<item value="System"/>
+			<item value="GAMEN"/>
+			<item value="GAMEN_H"/>
+			<item value="ShyotokuShoot"/>
+			<item value="tikeimap"/>
+			<item value="initstage"/>
+			<item value="buddha"/>
 		</list>
 		<list key="replacehistory">
 			<item value="BOSS_SCORE"/>
@@ -39,8 +39,8 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="9"/>
 		<item key="DIALOG_Y_ORIGIN" value="207"/>
-		<item key="DIALOG_WIDTH" value="414"/>
-		<item key="DIALOG_HEIGHT" value="454"/>
-		<item key="DIALOG_FONT_NAME" value="1|Yu Gothic UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Yu Gothic UI"/>
+		<item key="DIALOG_WIDTH" value="322"/>
+		<item key="DIALOG_HEIGHT" value="391"/>
+		<item key="DIALOG_FONT_NAME" value="1|Yu Gothic UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Yu Gothic UI"/>
 	</section>
 </section>

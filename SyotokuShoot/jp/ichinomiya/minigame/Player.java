@@ -28,9 +28,15 @@ public class Player extends GameChara {
 	 * @param y　初期位置
 	 * @param img　画像
 	 */
-	public Player(int x, int y, BufferedImage img) {
-		super(x, y, 12,12,img, 0, 0, 40, 78);
+	public BufferedImage imgR;
+	public BufferedImage imgL;
+	public Boolean left=false;
+	public Boolean right=false;
+	public Player(int x, int y, BufferedImage imgR,BufferedImage imgL) {
+		super(x, y, 12,12,imgR, 0, 0, 40, 78);
 		// TODO Auto-generated constructor stub
+		this.imgR = imgR;
+		this.imgL = imgL;
 	}
 
 	@Override
@@ -50,8 +56,14 @@ public class Player extends GameChara {
 		// TODO Auto-generated method stub
 		if(up==true) chara_y=chara_y-speed;
 		if(down==true) chara_y=chara_y+speed;
-		if(left==true) chara_x=chara_x-speed;
-		if(right==true) chara_x=chara_x+speed;
+		if(left==true) {
+			chara_x=chara_x-speed;
+			image1 = imgL;
+		}
+		if(right==true) {
+			chara_x=chara_x+speed;
+			image1 = imgR;
+		}
 
 		if(chara_y<0) chara_y=0;
 		if(chara_x<0) chara_x=0;
@@ -70,6 +82,7 @@ public class Player extends GameChara {
 	public void showHP(Graphics g, ImageObserver io){
 
 	}
+	
 
 	/**
 	 * @param num　与えられるダメージ量

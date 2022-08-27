@@ -13,6 +13,7 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.Clip;
 
+
 /**
  * ゲームテンプレートクラスを継承したメインクラス
  * @author a50609
@@ -30,7 +31,7 @@ public class ShyotokuShoot extends GameTemplate {
 	/**
 	 * 魔法ゲージの最大
 	 */
-	public static final int MAGIC_LIMIT=10;
+	public static final int MAGIC_LIMIT=1;
 
 
 	/**
@@ -43,12 +44,14 @@ public class ShyotokuShoot extends GameTemplate {
 	Insets insets = frame1.getInsets();
 	Clip seButton, seTitle, seGameClear,seGameOver,bgmMain,seItemGet,seMagic,sePumpkin,seVampiredown,seBatdown,seZombiedown,seDamaged,selaugh0,selaugh1;
 	Clip selaugh2,selaugh3,selaugh4,seRush,seBeforeRush,seFake,seClip21;
-	BufferedImage charaimage,backimage,startimage,item1image,item2image,scepterimg,spiritimg,lanternimg,buddhaimg;
+	BufferedImage playerimgL,backimage,startimage,item1image,item2image,scepterimg,spiritimg,lanternimg,buddhaimg;
 	BufferedImage snakeimage,zombieimage,zombieimage2,smokeimage, explosionimg,explosion2img,explosion3img,explosion4img;
-	BufferedImage gameoverimg,gameclearimg;
+	BufferedImage gameoverimg,gameclearimg,playerimgR,spiritimg2,spiritimg3;
+	BufferedImage tikeiimage;
 	Player player;
-	Witch witch;
-	MagicCircle magicAtk;
+	Boss boss;
+	Buddha magicAtk;
+	TikeiMap tikeimap;
 	/**
 	 * 背景の色
 	 */
@@ -75,17 +78,15 @@ public class ShyotokuShoot extends GameTemplate {
 	 */
 	int shoot_span = 0;
 	/**
-	 * コウモリの最大数
+	 * 人魂の最大数
 	 */
 	int bat_num;
 	/**
-	 * ヴァンパイアの最大数
+	 * 提灯お化けの最大数
 	 */
 	int vampire_num;
-	/**
-	 * 巨大ゾンビの最大数
-	 */
-	int zombie_num;
+	
+
 	/**
 	 * スタートした時の時間情報
 	 */
@@ -103,24 +104,21 @@ public class ShyotokuShoot extends GameTemplate {
 	/**
 	 * 魔女が出現したかどうか
 	 */
-	boolean isWitch = false;
+	boolean isBoss = false;
 	/**
-	 * コウモリの出現する確率
+	 * 人魂の出現する確率
 	 */
 	int bat_rate;
 	/**
-	 * ヴァンパイアの出現する確率
+	 * 提灯お化けの出現する確率
 	 */
 	int vampire_rate;
-	/**
-	 * ゾンビの出現する確率
-	 */
-	int zombie_rate;
+
 	
 	/**
 	 * ボスが現れるスコア
 	 */
-	int goal_distance;
+	int goal_distance=3000;
 	
 	/**
 	 * メインクラスのコンストラクタ
@@ -129,13 +127,16 @@ public class ShyotokuShoot extends GameTemplate {
 		super(SCREEN_W, SCREEN_H, "聖徳シュート");
 		// TODO Auto-generated constructor stub
 		try {
-			charaimage = ImageIO.read(getClass().getResource("player.png"));
+			playerimgL = ImageIO.read(getClass().getResource("player.png"));
+			playerimgR = ImageIO.read(getClass().getResource("player_right.png"));
 			backimage  = ImageIO.read(getClass().getResource("main.jpg"));
 			startimage = ImageIO.read(getClass().getResource("title.jpg"));
 			item1image = ImageIO.read(getClass().getResource("cross.png"));
 			item2image = ImageIO.read(getClass().getResource("wand.png"));
 			scepterimg = ImageIO.read(getClass().getResource("scepter.png"));
 			spiritimg = ImageIO.read(getClass().getResource("spirit.png"));
+			spiritimg2 = ImageIO.read(getClass().getResource("fireball.png"));
+			spiritimg3 = ImageIO.read(getClass().getResource("redfire.png"));
 			lanternimg = ImageIO.read(getClass().getResource("lantern.png"));
 			buddhaimg =  ImageIO.read(getClass().getResource("Buddha.png"));
 			zombieimage =  ImageIO.read(getClass().getResource("zombie.png"));
@@ -148,6 +149,7 @@ public class ShyotokuShoot extends GameTemplate {
 			explosion4img = ImageIO.read(getClass().getResource("blood.png"));
 			gameoverimg = ImageIO.read(getClass().getResource("gameover.jpg"));
 			gameclearimg = ImageIO.read(getClass().getResource("gameclear.jpg"));
+			tikeiimage = ImageIO.read(getClass().getResource("concat.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -273,10 +275,7 @@ public class ShyotokuShoot extends GameTemplate {
 		// TODO Auto-generated method stub
 		g.clearRect(0,0,SCREEN_W,SCREEN_H);
 		g.setColor(backcolor);
-		g.fillRect(0, 0, SCREEN_W, SCREEN_H);
-		g.setColor(backcolor);
-		g.fillRect(0, 0, SCREEN_W, SCREEN_H);
-		g.drawImage(backimage,0,0,frame1);
+		tikeimap.draw(g,frame1);
 		//自機移動
 		player.move(upkey, downkey, leftkey, rightkey);
 		//表示と削除
@@ -287,7 +286,7 @@ public class ShyotokuShoot extends GameTemplate {
 		g.setFont(new Font("SansSerif",Font.BOLD,20));
 		g.drawString("残機:"+player.player_life,30,30);
 
-		//魔法ゲージ
+		//仏ゲージ
 		g.setColor(Color.GRAY);
 		g.fillRect(30,50,80,10);
 		g.setColor(magic_color);
@@ -310,7 +309,7 @@ public class ShyotokuShoot extends GameTemplate {
 			drawStringCenter("ヤマタノオロチが現れた",50,g);
 
 
-		//カボチャ発射
+		//笏発射
 		if(shiftkey==true && shoot_span==0 ) {
 			pumpkins.add(new Scepter(player.chara_x+36,player.chara_y,scepterimg));
 			shoot_span = 15;
@@ -322,7 +321,7 @@ public class ShyotokuShoot extends GameTemplate {
 
 		//魔法陣
 		if(spacekey==true && shoot_span==0 && magic==MAGIC_LIMIT) {
-			magics.add(new MagicCircle(player.chara_x-70,player.chara_y-70,buddhaimg));
+			magics.add(new Buddha(player.chara_x-70,player.chara_y-70,buddhaimg));
 			magic=0;
 			//seMagic.stop();
 			seMagic.setFramePosition(0);
@@ -336,31 +335,22 @@ public class ShyotokuShoot extends GameTemplate {
 			bats.add(new Bat(rand_x,rand_y,spiritimg));
 		}
 
-		//ヴァンパイアの生成
+		//提灯お化けの生成
 		if(vampires.size()<vampire_num && (int)(Math.random()*vampire_rate)<1) {
 			int rand_x =(int)((Math.random()*8)*20)+300;
 			int rand_y =(int)((Math.random()*22)*20);
 			vampires.add(new Vampire(rand_x,rand_y,lanternimg));
 		}
 
-		//ゾンビの生成
-		if(zombies.size()<zombie_num && (int)(Math.random()*zombie_rate)<1) {
-			int rand_x =(int)((Math.random()*8)*20)+300;
-			int rand_y =200;
-			zombies.add(new Zombie(rand_x,rand_y,zombieimage,zombieimage2));
-		}
-
 		//魔女の生成
-		if(distance>goal_distance && isWitch == false) {
-			isWitch=true;
+		if(distance>goal_distance && isBoss == false) {
+			isBoss=true;
 			//selaugh1.stop();
-			selaugh1.setFramePosition(0);
-			selaugh1.start();
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("SansSerif",Font.BOLD,40));				
 		}
 
-		//ヴァンパイアの能力　コウモリ出現
+		//人魂出現
 		it=vampires.iterator();
 		while(it.hasNext()==true){
 			Vampire va = (Vampire) it.next();
@@ -376,38 +366,33 @@ public class ShyotokuShoot extends GameTemplate {
 			goMenu();
 		}
 
-		//魔女の能力1:偽物
-		if(isWitch==true&& witch.fakespan==0) {
-			witchFakes.clear();
-			selaugh4.stop();
-			selaugh4.setFramePosition(0);
-			selaugh4.start();
+		//オロチの能力1:火の玉
+		if(isBoss==true&&(int)(Math.random()*10)<1) {
 			int pattern=(int)(Math.random()*3);
-			witch.fakespan=300;
-			explosions.add(new Explosion(witch.chara_x,110,smokeimage,100,148));
-			explosions.add(new Explosion(witch.chara_x,210,smokeimage,100,148));
-			explosions.add(new Explosion(witch.chara_x,310,smokeimage,100,148));
 			switch(pattern) {
 			case 0://本物が一番上
-				witch.chara_y=110;
-				witchFakes.add(new WitchFake(witch.chara_x,witch.chara_y+100,snakeimage, witch.HP));
-				witchFakes.add(new WitchFake(witch.chara_x,witch.chara_y+200,snakeimage, witch.HP));
+			{
+				for(int i=0;i<4;i++)
+				bats.add(new Bat(boss.chara_x,boss.chara_y,spiritimg));
+			}
 				break;
 			case 1://本物が真ん中
-				witch.chara_y=210;
-				witchFakes.add(new WitchFake(witch.chara_x,witch.chara_y+100,snakeimage, witch.HP));
-				witchFakes.add(new WitchFake(witch.chara_x,witch.chara_y-100,snakeimage, witch.HP));
+			{
+				for(int i=0;i<4;i++)
+				bats.add(new Bat(boss.chara_x,boss.chara_y,spiritimg2));
+			}
 				break;
 			case 2://本物が一番下
-				witch.chara_y=310;
-				witchFakes.add(new WitchFake(witch.chara_x,witch.chara_y-200,snakeimage, witch.HP));
-				witchFakes.add(new WitchFake(witch.chara_x,witch.chara_y-100,snakeimage, witch.HP));
+				{
+					for(int i=0;i<4;i++)
+					bats.add(new Bat(boss.chara_x,boss.chara_y,spiritimg3));
+				}
 				break;
 			}
 		}
 
 		
-		//当たり判定 カボチャとコウモリ
+		//当たり判定 カボチャと人魂
 		it=bats.iterator();
 		while(it.hasNext()==true){
 			Bat ba = (Bat) it.next();
@@ -428,13 +413,13 @@ public class ShyotokuShoot extends GameTemplate {
 			}
 		}
 
-		//当たり判定 魔法陣とコウモリ
+		//当たり判定 魔法陣と人魂
 		it=bats.iterator();
 		while(it.hasNext()==true){
 			Bat ba = (Bat) it.next();
 			Iterator<GameChara> it2 =magics.iterator();
 			while(it2.hasNext()==true) {
-				MagicCircle ma= (MagicCircle)it2.next();
+				Buddha ma= (Buddha)it2.next();
 				if(ma.isColided(ba)==true) {
 					it.remove();
 					explosions.add(new Explosion(ba.chara_x,ba.chara_y,explosion2img));
@@ -478,9 +463,8 @@ public class ShyotokuShoot extends GameTemplate {
 			WitchFake wf = (WitchFake) it.next();
 			Iterator<GameChara> it2 =magics.iterator();
 			while(it2.hasNext()==true) {
-				MagicCircle ma= (MagicCircle)it2.next();
+				Buddha ma= (Buddha)it2.next();
 				if(ma.isColided(wf)==true) {
-					//explosions.add(new Explosion(tk.chara_x,tk.chara_y,charaimage));
 					it.remove();
 					explosions.add(new Explosion(wf.chara_x-10,wf.chara_y-50,smokeimage,100,148));
 					//seClip16.stop();
@@ -491,7 +475,7 @@ public class ShyotokuShoot extends GameTemplate {
 			}
 		}
 
-		//当たり判定 カボチャとヴァンパイア
+		//当たり判定 カボチャと提灯お化け
 		it=vampires.iterator();
 		while(it.hasNext()==true){
 			Vampire va = (Vampire) it.next();
@@ -499,7 +483,6 @@ public class ShyotokuShoot extends GameTemplate {
 			while(it2.hasNext()==true) {
 				Scepter pu = (Scepter)it2.next();
 				if(pu.isColided(va)==true) {
-					//explosions.add(new Explosion(tk.chara_x,tk.chara_y,charaimage));
 					va.HP=va.HP - 1;
 					if(va.HP<=0) {
 						it.remove();
@@ -518,13 +501,13 @@ public class ShyotokuShoot extends GameTemplate {
 			}
 		}
 
-		//当たり判定 魔法陣とヴァンパイア
+		//当たり判定 魔法陣と提灯お化け
 		it=vampires.iterator();
 		while(it.hasNext()==true){
 			Vampire va = (Vampire) it.next();
 			Iterator<GameChara> it2 =magics.iterator();
 			while(it2.hasNext()==true) {
-				MagicCircle ma= (MagicCircle)it2.next();
+				Buddha ma= (Buddha)it2.next();
 				if(ma.isColided(va)==true) {
 					va.HP=va.HP - 3;
 					if(va.HP<=0) {
@@ -539,7 +522,7 @@ public class ShyotokuShoot extends GameTemplate {
 				}
 			}
 		}
-		//当たり判定　コウモリとプレイヤー
+		//当たり判定　人魂とプレイヤー
 		it=bats.iterator();
 		while(it.hasNext()==true){
 			Bat ba = (Bat)it.next();
@@ -559,7 +542,7 @@ public class ShyotokuShoot extends GameTemplate {
 			}
 		}
 
-		//当たり判定　ヴァンパイアとプレイヤー
+		//当たり判定　提灯お化けとプレイヤー
 		it=vampires.iterator();
 		while(it.hasNext()==true){
 			Vampire va = (Vampire)it.next();
@@ -578,25 +561,7 @@ public class ShyotokuShoot extends GameTemplate {
 				break;
 			}
 		}
-		//当たり判定　ゾンビとプレイヤー
-		it=zombies.iterator();
-		while(it.hasNext()==true){
-			Zombie zo = (Zombie)it.next();
-			if(zo.isColided(player)) {
-				if(player.damaged(1)) {
-					//seDamaged.stop();
-					seDamaged.setFramePosition(0);
-					seDamaged.start();
-					it.remove();
-					explosions.add(new Explosion(player.chara_x,player.chara_y,explosion4img));
-				}
-				if(player.player_life<0)
-				{
-					goGameOver();
-				}
-				break;
-			}
-		}
+
 		//当たり判定　偽物魔女とプレイヤー
 				it=witchFakes.iterator();
 				while(it.hasNext()==true){
@@ -615,65 +580,17 @@ public class ShyotokuShoot extends GameTemplate {
 						break;
 					}
 				}
-		
-		//当たり判定 ゾンビとカボチャ
-		it=zombies.iterator();
-		while(it.hasNext()==true){
-			Zombie zo = (Zombie) it.next();
-			Iterator<GameChara> it2 =pumpkins.iterator();
-			while(it2.hasNext()==true) {
-				Scepter pu = (Scepter)it2.next();
-				if(pu.isColided(zo)==true) {
-					zo.HP=zo.HP - 1;
-					if(zo.HP<=0) {
-						it.remove();
-						explosions.add(new Explosion(zo.chara_x+70,zo.chara_y+70,explosion3img,80,80));
-						//seZombiedown.stop();
-						seZombiedown.setFramePosition(0);
-						seZombiedown.start();
-						magic=magic+1;
-						if(magic>MAGIC_LIMIT)magic = MAGIC_LIMIT;
-					}
-					it2.remove();
 
-
-					break;
-				}
-			}
-		}
-
-		//当たり判定 魔法陣とゾンビ
-		it=zombies.iterator();
-		while(it.hasNext()==true){
-			Zombie zo = (Zombie) it.next();
-			Iterator<GameChara> it2 =magics.iterator();
-			while(it2.hasNext()==true) {
-				MagicCircle ma= (MagicCircle)it2.next();
-				if(ma.isColided(zo)==true&&zo.interval==0) {
-					//explosions.add(new Explosion(tk.chara_x,tk.chara_y,charaimage));
-					zo.HP=zo.HP - 3;
-					zo.interval=5;
-					if(zo.HP<=0) {
-						it.remove();
-						explosions.add(new Explosion(zo.chara_x+70,zo.chara_y+70,explosion3img,80,80));
-						//seZombiedown.stop();
-						seZombiedown.setFramePosition(0);
-						seZombiedown.start();
-					}
-					break;
-				}
-			}
-		}
 
 		//当たり判定 魔女とカボチャ
-		if(isWitch==true) {
+		if(isBoss==true) {
 			it=pumpkins.iterator();
 			while(it.hasNext()==true){
 				Scepter pu = (Scepter)it.next();
-				if(pu.isColided(witch)) {
+				if(pu.isColided(boss)) {
 					it.remove();
-					witch.HP -=1;
-					if(witch.HP<0)
+					boss.HP -=1;
+					if(boss.HP<0)
 					{
 						goStageClear();
 					}
@@ -683,15 +600,15 @@ public class ShyotokuShoot extends GameTemplate {
 		}
 
 		//当たり判定 魔女と魔法陣
-		if(isWitch==true) {
+		if(isBoss==true) {
 			it=magics.iterator();
 			while(it.hasNext()==true){
-				MagicCircle ma = (MagicCircle)it.next();
-				if(ma.isColided(witch)&&witch.interval==0) {
-					witch.HP -=3;
-					witch.interval = 5;
-					System.out.println(witch.HP);
-					if(witch.HP<0)
+				Buddha ma = (Buddha)it.next();
+				if(ma.isColided(boss)&&boss.interval==0) {
+					boss.HP -=3;
+					boss.interval = 5;
+					System.out.println(boss.HP);
+					if(boss.HP<0)
 					{
 						goStageClear();
 					}
@@ -701,8 +618,8 @@ public class ShyotokuShoot extends GameTemplate {
 		}
 
 		//当たり判定 魔女とプレイヤー
-		if(isWitch==true) {
-			if(witch.isColided(player)) {
+		if(isBoss==true) {
+			if(boss.isColided(player)) {
 				//seDamaged.stop();
 				seDamaged.setFramePosition(0);
 				seDamaged.start();
@@ -733,7 +650,7 @@ public class ShyotokuShoot extends GameTemplate {
 			if(ba.isOutofScreen()) it.remove();
 		}
 
-		//ヴァンパイアの表示と削除
+		//提灯お化けの表示と削除
 		it = vampires.iterator();
 		while(it.hasNext()==true) {
 			Vampire va = (Vampire)it.next();
@@ -741,16 +658,9 @@ public class ShyotokuShoot extends GameTemplate {
 			if(va.isOutofScreen()) it.remove();
 		}
 
-		//ゾンビの表示と削除
-		it = zombies.iterator();
-		while(it.hasNext()==true) {
-			Zombie zo = (Zombie)it.next();
-			zo.draw(g, frame1);
-			if(zo.isOutofScreen()) it.remove();
-		}
 		//魔女の表示と削除
-		if(isWitch==true) {
-			witch.draw(g, frame1);
+		if(isBoss==true) {
+			boss.draw(g, frame1);
 		}
 
 		//魔女の偽物の表示と削除
@@ -763,7 +673,7 @@ public class ShyotokuShoot extends GameTemplate {
 		//魔法陣の表示と削除
 		it = magics.iterator();
 		while(it.hasNext()==true) {
-			MagicCircle ma = (MagicCircle)it.next();
+			Buddha ma = (Buddha)it.next();
 			ma.draw(g, frame1);
 			if(ma.isOutofScreen()) it.remove();
 		}
@@ -793,29 +703,20 @@ public class ShyotokuShoot extends GameTemplate {
 		case 1:
 			bat_rate = 80;
 			vampire_rate = 350;
-			zombie_rate = 400;
 			bat_num =30;
-			zombie_num =1;
 			vampire_num = 1;
-			goal_distance = 3000;
 			break;
 		case 2:
 			bat_rate = 50;
 			vampire_rate = 300;
-			zombie_rate = 400;
 			bat_num =40;
-			zombie_num =2;
 			vampire_num=2;
-			goal_distance = 8000;
 			break;
 		case 3:
 			bat_rate = 30;
 			vampire_rate = 100;
-			zombie_rate = 300;
 			bat_num =50;
-			zombie_num =3;
 			vampire_num=3;
-			goal_distance = 20000;
 			break;
 		}
 	}
@@ -917,13 +818,13 @@ public class ShyotokuShoot extends GameTemplate {
 	@Override
 	void initStageStart() {
 		// TODO Auto-generated method stub
-
+		tikeimap = new TikeiMap(tikeiimage,"001.map","001.pat");
 		bgmMain.stop();
 		bgmMain.setFramePosition(0);
 		bgmMain.loop(Clip.LOOP_CONTINUOUSLY);
-		player = new Player(30,210,charaimage);
-		witch = new Witch(360,210,snakeimage);
-		isWitch=false;
+		player = new Player(30,210,playerimgR,playerimgL);
+		boss = new Boss(360,210,snakeimage);
+		isBoss=false;
 		magic=0;
 		distance=0;
 		bats = new ArrayList<GameChara>();
@@ -937,9 +838,6 @@ public class ShyotokuShoot extends GameTemplate {
 		upkey=false;downkey=false;rightkey=false;leftkey=false;
 		shiftkey=false; spacekey=false;esckey=false;
 		starttime=System.currentTimeMillis();
-		selaugh2.stop();
-		selaugh2.setFramePosition(0);
-		selaugh2.start();
 
 	}
 
@@ -953,7 +851,6 @@ public class ShyotokuShoot extends GameTemplate {
 		bgmMain.stop();
 		selaugh0.stop();
 		selaugh1.stop();
-		selaugh2.stop();
 		selaugh3.stop();
 		seGameClear.stop();
 		seGameClear.setFramePosition(0);
